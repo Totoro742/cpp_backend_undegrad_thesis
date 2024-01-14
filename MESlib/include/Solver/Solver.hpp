@@ -29,6 +29,7 @@
 #include <eigen3/Eigen/Eigenvalues>
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/SparseLU>
+#include <eigen3/Eigen/SparseCholesky>
 
 
 namespace mes {
@@ -38,6 +39,7 @@ namespace mes {
     private:
         double dx;
         int nDampLayers = 4;
+        int minIdx = 0;
         double frequency = 2.4 ; // in GHz
         mes::baseFuncType fType = mes::LIN;
         Vertex2D sourcePoint = Vertex2D(0., 0.);
@@ -62,6 +64,7 @@ namespace mes {
         Eigen::SparseMatrix<std::complex<double>> stiffnessMatrix;
         Eigen::Matrix<std::complex<double>, Eigen::Dynamic, 1> loadVector;
         Eigen::Matrix<std::complex<double>, Eigen::Dynamic, 1> solutions;
+        std::vector<double> sum_solutions;
         Eigen::SparseLU<Eigen::SparseMatrix<std::complex<double>>>  solverLU;
 
 
@@ -96,10 +99,10 @@ namespace mes {
         Solver& computeSolver(bool compTime = false);
 
         Solver& solve();
-        Solver& solve(double sx, double sy);
+        Solver& solve(double sx, double sy, bool add = false);
         std::string draw();
-        Solver& drawImag();
-        Solver& drawReal();
+        std::string drawImag();
+        std::string drawReal();
     };
 
 

@@ -65,7 +65,7 @@ namespace mes{
     class TriangleElement {
         private:
             static int ngaus;
-            static std::vector<double> xgaus, ygaus, wgaus;
+
             static std::vector<std::function<double(double&, double&)>> baseFunc;
             static std::vector<std::vector<double>>  baseFunc_Values;
             static std::vector<std::vector<double>>  baseFuncDiffQuotient_xValues;
@@ -84,7 +84,7 @@ namespace mes{
             std::pair<double, double> nablaPhik(int &i, int &k);
 
     public:
-
+        static std::vector<double> xgaus, ygaus, wgaus;
             Vertex2D& globalVector(int &i);
             static double k_;
 

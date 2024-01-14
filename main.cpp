@@ -10,8 +10,6 @@
 using json = nlohmann::json;
 
 std::string generateHeatmap(payload p) {
-
-
     const double width = p.c.canvasWidth;
     const double height = width * (double(p.c.height) / double(p.c.width));
 
@@ -44,22 +42,21 @@ std::string generateHeatmap(payload p) {
                                                     yIRL(rightUpY),
                                                     mes::elementType(wall.m.type)));
     }
-    std::cout << "initDampWalls" << std::endl;
-
     solver.buildStructure(true).computeSolver(true).solve(xIRL(p.r.x), yIRL(p.r.y));
-    std::cout << "abs result range: [" << 0 << ", " << solver.getMaxValue() << "]\n";
-    std::cout << "draw" << std::endl;
+
     std::string filename = solver.draw();
     std::string path = "./temp/" + filename;
 
     Magick::Image image;
-    image.negate(true);
     Magick::Blob blob;
     image.read(path);
 
     image.write(&blob);
-
-    std::remove(path.c_str());
+    try{
+        std::remove(path.c_str());
+    } catch(std::exception& e){
+        std::cout << e.what() << std::endl;
+    }
 
     return blob.base64();
 }
@@ -72,7 +69,6 @@ int main() {
 
     CROW_ROUTE(app, "/").methods(crow::HTTPMethod::POST)([](const crow::request &request) {
         crow::response res;
-        // res.add_header("Content-Type", "image/jpeg");
         std::string body = request.body;
         json body_json = json::parse(body);
         std::cout << body_json.dump(4);
